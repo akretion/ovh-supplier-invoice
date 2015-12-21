@@ -333,11 +333,11 @@ class OvhInvoiceGet(models.TransientModel):
                 logger.debug(
                     'res_iinfo.finalprice=%s ; invoice.amount_total=%s',
                     res_iinfo.finalprice, invoice.amount_total)
-                pd = self.env['decimal.precision'].precision_get('Account')
+                prec = self.env['decimal.precision'].precision_get('Account')
                 if float_compare(
                         float(res_iinfo.baseprice),
                         invoice.amount_untaxed,
-                        precision_digits=pd) < 0:
+                        precision_digits=prec):
                     raise Warning(_(
                         "On OVH invoice %s, the total untaxed amount is %.2f "
                         "whereas the total untaxed amount in Odoo is %.2f.")
@@ -347,7 +347,7 @@ class OvhInvoiceGet(models.TransientModel):
                 if float_compare(
                         float(res_iinfo.finalprice),
                         invoice.amount_total,
-                        precision_digits=pd) < 0:
+                        precision_digits=prec):
                     # we should force the VAT amount
                     assert invoice.tax_line, 'Invoice has no tax line'
                     native_vat_amount = invoice.tax_line[0].amount
